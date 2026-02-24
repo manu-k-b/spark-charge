@@ -14,7 +14,143 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      charger_status: {
+        Row: {
+          current_power: number
+          current_session_id: string | null
+          id: string
+          location: string
+          name: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          current_power?: number
+          current_session_id?: string | null
+          id?: string
+          location?: string
+          name?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          current_power?: number
+          current_session_id?: string | null
+          id?: string
+          location?: string
+          name?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "charger_status_current_session_id_fkey"
+            columns: ["current_session_id"]
+            isOneToOne: false
+            referencedRelation: "charging_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      charging_sessions: {
+        Row: {
+          charger_id: string
+          created_at: string
+          end_time: string | null
+          energy_consumed: number
+          id: string
+          start_time: string
+          status: string
+          total_cost: number
+          user_id: string
+        }
+        Insert: {
+          charger_id?: string
+          created_at?: string
+          end_time?: string | null
+          energy_consumed?: number
+          id?: string
+          start_time?: string
+          status?: string
+          total_cost?: number
+          user_id: string
+        }
+        Update: {
+          charger_id?: string
+          created_at?: string
+          end_time?: string | null
+          energy_consumed?: number
+          id?: string
+          start_time?: string
+          status?: string
+          total_cost?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          name: string
+          phone: string | null
+          updated_at: string
+          user_id: string
+          wallet_balance: number
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string
+          phone?: string | null
+          updated_at?: string
+          user_id: string
+          wallet_balance?: number
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string
+          phone?: string | null
+          updated_at?: string
+          user_id?: string
+          wallet_balance?: number
+        }
+        Relationships: []
+      }
+      wallet_transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string
+          id: string
+          session_id: string | null
+          type: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          description?: string
+          id?: string
+          session_id?: string | null
+          type: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string
+          id?: string
+          session_id?: string | null
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
