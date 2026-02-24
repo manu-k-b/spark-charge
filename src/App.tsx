@@ -17,7 +17,6 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-// Protected Route Component
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, isLoading } = useAuth();
 
@@ -36,7 +35,6 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   return <>{children}</>;
 };
 
-// Auth Route - redirects to home if already logged in
 const AuthRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, isLoading } = useAuth();
 
@@ -59,62 +57,13 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Index />} />
-      <Route
-        path="/login"
-        element={
-          <AuthRoute>
-            <Login />
-          </AuthRoute>
-        }
-      />
-      <Route
-        path="/signup"
-        element={
-          <AuthRoute>
-            <Signup />
-          </AuthRoute>
-        }
-      />
-      <Route
-        path="/home"
-        element={
-          <ProtectedRoute>
-            <Home />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/charging"
-        element={
-          <ProtectedRoute>
-            <Charging />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/scan"
-        element={
-          <ProtectedRoute>
-            <Scan />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/wallet"
-        element={
-          <ProtectedRoute>
-            <Wallet />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/profile"
-        element={
-          <ProtectedRoute>
-            <Profile />
-          </ProtectedRoute>
-        }
-      />
+      <Route path="/login" element={<AuthRoute><Login /></AuthRoute>} />
+      <Route path="/signup" element={<AuthRoute><Signup /></AuthRoute>} />
+      <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+      <Route path="/charging" element={<ProtectedRoute><Charging /></ProtectedRoute>} />
+      <Route path="/scan" element={<ProtectedRoute><Scan /></ProtectedRoute>} />
+      <Route path="/wallet" element={<ProtectedRoute><Wallet /></ProtectedRoute>} />
+      <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

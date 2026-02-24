@@ -5,7 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 
 export const LiveStats: React.FC = () => {
   const { liveData, isCharging } = useCharger();
-  const { user } = useAuth();
+  const { profile } = useAuth();
 
   const stats = [
     {
@@ -34,7 +34,7 @@ export const LiveStats: React.FC = () => {
     },
     {
       icon: Activity,
-      value: user?.walletBalance.toFixed(2) || '0.00',
+      value: profile?.wallet_balance?.toFixed(2) || '0.00',
       unit: '₹',
       label: 'Wallet Balance',
       color: 'text-accent-foreground',
