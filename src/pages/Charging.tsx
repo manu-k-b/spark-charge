@@ -5,9 +5,11 @@ import { MobileLayout } from '@/components/layout/MobileLayout';
 import { LiveStats } from '@/components/charging/LiveStats';
 import { ChargingControls } from '@/components/charging/ChargingControls';
 import { useCharger } from '@/contexts/ChargerContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Charging: React.FC = () => {
-  const { isCharging, currentSession, chargerStatus } = useCharger();
+  const { isCharging, currentSession, chargerStatus, runningCost } = useCharger();
+  const { wallet } = useAuth();
   const navigate = useNavigate();
 
   if (!isCharging) {
@@ -32,14 +34,14 @@ const Charging: React.FC = () => {
           </button>
           <div>
             <h1 className="text-xl font-display font-bold">Charging Session</h1>
-            <p className="text-muted-foreground text-sm">{chargerStatus?.name}</p>
+            <p className="text-muted-foreground text-sm">Campus EV Charger</p>
           </div>
         </div>
 
         <div className="card-elevated p-8 text-center gradient-charging rounded-3xl">
           <div className="relative inline-flex items-center justify-center">
-            <div className="absolute w-32 h-32 rounded-full bg-primary-foreground/20 animate-pulse-ring" />
-            <div className="absolute w-24 h-24 rounded-full bg-primary-foreground/30 animate-pulse-ring" style={{ animationDelay: '0.5s' }} />
+            <div className="absolute w-32 h-32 rounded-full bg-primary-foreground/20 animate-pulse" />
+            <div className="absolute w-24 h-24 rounded-full bg-primary-foreground/30 animate-pulse" style={{ animationDelay: '0.5s' }} />
             <div className="w-20 h-20 rounded-full bg-primary-foreground flex items-center justify-center">
               <Zap className="w-10 h-10 text-primary charging-pulse" />
             </div>
@@ -57,7 +59,7 @@ const Charging: React.FC = () => {
         <ChargingControls />
 
         <div className="text-center text-sm text-muted-foreground">
-          <p>Charging will automatically stop when wallet balance reaches ₹0</p>
+          <p>Auto-stop when running cost reaches ₹{wallet?.balance?.toFixed(2) || '0'}</p>
         </div>
       </div>
     </MobileLayout>

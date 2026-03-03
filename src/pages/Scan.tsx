@@ -8,28 +8,23 @@ import { toast } from 'sonner';
 
 const Scan: React.FC = () => {
   const [isScanning, setIsScanning] = useState(false);
-  const { chargerStatus } = useCharger();
-  const { profile } = useAuth();
+  const { chargerStatus, isCharging } = useCharger();
+  const { wallet } = useAuth();
   const navigate = useNavigate();
 
   const handleSimulateScan = () => {
     setIsScanning(true);
     setTimeout(() => {
       setIsScanning(false);
-      
-      if (chargerStatus?.status === 'charging') {
+
+      if (isCharging) {
         navigate('/charging');
         return;
       }
 
-      if (!profile || profile.wallet_balance < 10) {
-        toast.error('Insufficient wallet balance. Minimum ₹10 required.');
+      if (!wallet || wallet.balance < 20) {
+        toast.error('Insufficient wallet balance. Minimum ₹20 required.');
         navigate('/wallet');
-        return;
-      }
-
-      if (chargerStatus?.status === 'offline') {
-        toast.error('Charger is currently offline.');
         return;
       }
 

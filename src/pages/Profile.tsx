@@ -10,13 +10,13 @@ import { toast } from 'sonner';
 interface SessionHistory {
   id: string;
   start_time: string;
-  energy_consumed: number;
-  total_cost: number;
+  used_energy: number;
+  cost: number;
   status: string;
 }
 
 const Profile: React.FC = () => {
-  const { user, profile, logout } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [showSettings, setShowSettings] = useState(false);
   const [sessions, setSessions] = useState<SessionHistory[]>([]);
@@ -24,26 +24,26 @@ const Profile: React.FC = () => {
 
   useEffect(() => {
     if (!user) return;
-    const fetch = async () => {
+    const fetchSessions = async () => {
       const { data } = await supabase
-        .from('charging_sessions')
+        .from('charging_session')
         .select('*')
         .eq('user_id', user.id)
         .eq('status', 'completed')
         .order('start_time', { ascending: false })
         .limit(10);
-      
+
       if (data) {
         const typed = data as unknown as SessionHistory[];
         setSessions(typed);
         setStats({
           count: typed.length,
-          totalEnergy: typed.reduce((s, x) => s + Number(x.energy_consumed), 0),
-          totalCost: typed.reduce((s, x) => s + Number(x.total_cost), 0),
+          totalEnergy: typed.reduce((s, x) => s + Number(x.used_energy), 0),
+          totalCost: typed.reduce((s, x) => s + Number(x.cost), 0),
         });
       }
     };
-    fetch();
+    fetchSessions();
   }, [user]);
 
   const handleLogout = async () => {
@@ -68,10 +68,10 @@ const Profile: React.FC = () => {
               <User className="w-8 h-8 text-primary-foreground" />
             </div>
             <div className="flex-1">
-              <h2 className="font-display font-bold text-lg">{profile?.name || 'User'}</h2>
+              <h2 className="font-display font-bold text-lg">{user?.user_metadata?.name || 'User'}</h2>
               <div className="flex items-center gap-1 text-muted-foreground text-sm mt-1">
                 <Mail className="w-4 h-4" />
-                <span>{profile?.email || user?.email || ''}</span>
+                <span>{user?.email || ''}</span>
               </div>
             </div>
           </div>
@@ -129,9 +129,9 @@ const Profile: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1">
                     <Zap className="w-4 h-4 text-primary" />
-                    <span className="font-semibold">{Number(s.energy_consumed).toFixed(3)} kWh</span>
+                    <span className="font-semibold">{Number(s.used_energy).toFixed(3)} kWh</span>
                   </div>
-                  <span className="font-bold text-primary">₹{Number(s.total_cost).toFixed(2)}</span>
+                  <span className="font-bold text-primary">₹{Number(s.cost).toFixed(2)}</span>
                 </div>
               </div>
             ))}

@@ -4,7 +4,7 @@ import { Wallet, Plus } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 export const WalletCard: React.FC = () => {
-  const { profile } = useAuth();
+  const { wallet } = useAuth();
 
   return (
     <div className="card-elevated p-5">
@@ -19,7 +19,7 @@ export const WalletCard: React.FC = () => {
         </Link>
       </div>
       <div className="wallet-balance text-foreground">
-        ₹{profile?.wallet_balance?.toFixed(2) || '0.00'}
+        ₹{wallet?.balance?.toFixed(2) || '0.00'}
       </div>
     </div>
   );

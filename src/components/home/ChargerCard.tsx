@@ -4,19 +4,23 @@ import { StatusBadge } from '@/components/ui/StatusBadge';
 import { useCharger } from '@/contexts/ChargerContext';
 
 export const ChargerCard: React.FC = () => {
-  const { chargerStatus, liveData, isCharging } = useCharger();
+  const { chargerStatus, isCharging, usedEnergy, runningCost } = useCharger();
+
+  if (!chargerStatus) return null;
+
+  const displayStatus = chargerStatus.relay ? 'charging' : 'available';
 
   return (
     <div className={`card-elevated p-5 ${isCharging ? 'ring-2 ring-primary shadow-glow' : ''}`}>
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h3 className="font-display font-bold text-lg">{chargerStatus.name}</h3>
+          <h3 className="font-display font-bold text-lg">Campus EV Charger</h3>
           <div className="flex items-center gap-1 text-muted-foreground text-sm mt-1">
             <MapPin className="w-4 h-4" />
-            <span>{chargerStatus.location}</span>
+            <span>Main Parking Lot</span>
           </div>
         </div>
-        <StatusBadge status={chargerStatus.status} />
+        <StatusBadge status={displayStatus} />
       </div>
 
       {isCharging && (
@@ -25,11 +29,11 @@ export const ChargerCard: React.FC = () => {
             <div className="flex items-center justify-center gap-1 text-primary mb-1">
               <Zap className="w-5 h-5 charging-pulse" />
             </div>
-            <div className="stat-value text-2xl">{liveData.power.toFixed(2)}</div>
+            <div className="stat-value text-2xl">{chargerStatus.power_kw.toFixed(2)}</div>
             <div className="stat-label text-xs">kW</div>
           </div>
           <div className="text-center">
-            <div className="stat-value text-2xl">{liveData.energySession.toFixed(3)}</div>
+            <div className="stat-value text-2xl">{usedEnergy.toFixed(3)}</div>
             <div className="stat-label text-xs">kWh</div>
           </div>
         </div>
