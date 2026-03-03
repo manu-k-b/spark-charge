@@ -16,137 +16,114 @@ export type Database = {
     Tables: {
       charger_status: {
         Row: {
-          current_power: number
-          current_session_id: string | null
+          current: number
+          energy: number
           id: string
-          location: string
-          name: string
-          status: string
+          power_kw: number
+          relay: boolean
           updated_at: string
+          voltage: number
         }
         Insert: {
-          current_power?: number
-          current_session_id?: string | null
+          current?: number
+          energy?: number
           id?: string
-          location?: string
-          name?: string
-          status?: string
+          power_kw?: number
+          relay?: boolean
           updated_at?: string
+          voltage?: number
         }
         Update: {
-          current_power?: number
-          current_session_id?: string | null
+          current?: number
+          energy?: number
           id?: string
-          location?: string
-          name?: string
-          status?: string
+          power_kw?: number
+          relay?: boolean
           updated_at?: string
+          voltage?: number
         }
-        Relationships: [
-          {
-            foreignKeyName: "charger_status_current_session_id_fkey"
-            columns: ["current_session_id"]
-            isOneToOne: false
-            referencedRelation: "charging_sessions"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
-      charging_sessions: {
+      charging_session: {
         Row: {
           charger_id: string
+          cost: number
           created_at: string
+          end_energy: number | null
           end_time: string | null
-          energy_consumed: number
           id: string
+          start_energy: number
           start_time: string
           status: string
-          total_cost: number
+          used_energy: number
           user_id: string
         }
         Insert: {
           charger_id?: string
+          cost?: number
           created_at?: string
+          end_energy?: number | null
           end_time?: string | null
-          energy_consumed?: number
           id?: string
+          start_energy?: number
           start_time?: string
           status?: string
-          total_cost?: number
+          used_energy?: number
           user_id: string
         }
         Update: {
           charger_id?: string
+          cost?: number
           created_at?: string
+          end_energy?: number | null
           end_time?: string | null
-          energy_consumed?: number
           id?: string
+          start_energy?: number
           start_time?: string
           status?: string
-          total_cost?: number
+          used_energy?: number
           user_id?: string
         }
         Relationships: []
       }
-      profiles: {
+      settings: {
         Row: {
-          created_at: string
-          email: string | null
           id: string
-          name: string
-          phone: string | null
+          key: string
+          value: number
+        }
+        Insert: {
+          id?: string
+          key: string
+          value?: number
+        }
+        Update: {
+          id?: string
+          key?: string
+          value?: number
+        }
+        Relationships: []
+      }
+      wallet: {
+        Row: {
+          balance: number
+          created_at: string
+          id: string
           updated_at: string
           user_id: string
-          wallet_balance: number
         }
         Insert: {
+          balance?: number
           created_at?: string
-          email?: string | null
           id?: string
-          name?: string
-          phone?: string | null
           updated_at?: string
-          user_id: string
-          wallet_balance?: number
-        }
-        Update: {
-          created_at?: string
-          email?: string | null
-          id?: string
-          name?: string
-          phone?: string | null
-          updated_at?: string
-          user_id?: string
-          wallet_balance?: number
-        }
-        Relationships: []
-      }
-      wallet_transactions: {
-        Row: {
-          amount: number
-          created_at: string
-          description: string
-          id: string
-          session_id: string | null
-          type: string
-          user_id: string
-        }
-        Insert: {
-          amount: number
-          created_at?: string
-          description?: string
-          id?: string
-          session_id?: string | null
-          type: string
           user_id: string
         }
         Update: {
-          amount?: number
+          balance?: number
           created_at?: string
-          description?: string
           id?: string
-          session_id?: string | null
-          type?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: []

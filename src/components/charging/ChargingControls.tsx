@@ -7,19 +7,14 @@ import { toast } from 'sonner';
 
 export const ChargingControls: React.FC = () => {
   const { isCharging, startCharging, stopCharging, chargerStatus } = useCharger();
-  const { profile } = useAuth();
+  const { wallet } = useAuth();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleStart = async () => {
-    if (!profile || profile.wallet_balance < 10) {
-      toast.error('Insufficient balance. Minimum ₹10 required.');
+    if (!wallet || wallet.balance < 20) {
+      toast.error('Insufficient balance. Minimum ₹20 required.');
       navigate('/wallet');
-      return;
-    }
-
-    if (chargerStatus?.status === 'offline') {
-      toast.error('Charger is currently offline.');
       return;
     }
 
@@ -40,12 +35,14 @@ export const ChargingControls: React.FC = () => {
     try {
       await stopCharging();
       toast.success('Charging stopped successfully!');
-    } catch (error) {
+    } catch {
       toast.error('Failed to stop charging.');
     } finally {
       setIsLoading(false);
     }
   };
+
+  const chargerAvailable = chargerStatus && !chargerStatus.relay;
 
   if (isCharging) {
     return (
@@ -58,7 +55,7 @@ export const ChargingControls: React.FC = () => {
 
   return (
     <button onClick={handleStart}
-      disabled={isLoading || chargerStatus?.status !== 'available'}
+      disabled={isLoading || !chargerAvailable}
       className="w-full gradient-primary text-primary-foreground font-semibold rounded-2xl py-4 flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-50 disabled:grayscale">
       {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <><Play className="w-5 h-5" />Start Charging</>}
     </button>
