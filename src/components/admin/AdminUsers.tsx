@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Users, IndianRupee, Zap, Loader2, Pencil, Check, X } from 'lucide-react';
+import { Users, IndianRupee, Zap, Loader2, Pencil, Check, X, Shield, ShieldOff } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface UserRow {
   id: string;
@@ -10,14 +11,17 @@ interface UserRow {
   balance: number;
   session_count: number;
   active_sessions: number;
+  is_admin: boolean;
 }
 
 const AdminUsers: React.FC = () => {
+  const { user: currentUser } = useAuth();
   const [users, setUsers] = useState<UserRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editValue, setEditValue] = useState('');
   const [saving, setSaving] = useState(false);
+  const [togglingRole, setTogglingRole] = useState<string | null>(null);
 
   const fetchUsers = async () => {
     const { data: { session } } = await supabase.auth.getSession();
@@ -74,6 +78,31 @@ const AdminUsers: React.FC = () => {
     setEditingId(null);
   };
 
+  const toggleRole = async (userId: string, currentlyAdmin: boolean) => {
+    if (userId === currentUser?.id) {
+      toast.error("You can't revoke your own admin role");
+      return;
+    }
+
+    setTogglingRole(userId);
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) { setTogglingRole(null); return; }
+
+    const action = currentlyAdmin ? 'revoke' : 'grant';
+    const { error } = await supabase.functions.invoke('admin-manage-role', {
+      headers: { Authorization: `Bearer ${session.access_token}` },
+      body: { user_id: userId, action },
+    });
+
+    if (error) {
+      toast.error(`Failed to ${action} admin role`);
+    } else {
+      setUsers(prev => prev.map(u => u.id === userId ? { ...u, is_admin: !currentlyAdmin } : u));
+      toast.success(`Admin role ${action === 'grant' ? 'granted' : 'revoked'}`);
+    }
+    setTogglingRole(null);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -97,10 +126,37 @@ const AdminUsers: React.FC = () => {
         users.map((u) => (
           <div key={u.id} className="card-elevated p-3">
             <div className="flex items-center justify-between mb-1">
-              <span className="text-sm font-medium truncate max-w-[200px]">{u.email}</span>
-              <span className="text-[10px] text-muted-foreground">
-                {new Date(u.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: '2-digit' })}
-              </span>
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="text-sm font-medium truncate max-w-[180px]">{u.email}</span>
+                {u.is_admin && (
+                  <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-primary/15 text-primary shrink-0">
+                    Admin
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <button
+                  onClick={() => toggleRole(u.id, u.is_admin)}
+                  disabled={togglingRole === u.id || u.id === currentUser?.id}
+                  className={`p-1.5 rounded-lg transition-colors disabled:opacity-40 ${
+                    u.is_admin
+                      ? 'hover:bg-destructive/10 text-destructive'
+                      : 'hover:bg-primary/10 text-muted-foreground'
+                  }`}
+                  title={u.id === currentUser?.id ? 'Cannot modify own role' : u.is_admin ? 'Revoke admin' : 'Grant admin'}
+                >
+                  {togglingRole === u.id ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : u.is_admin ? (
+                    <ShieldOff className="w-3.5 h-3.5" />
+                  ) : (
+                    <Shield className="w-3.5 h-3.5" />
+                  )}
+                </button>
+                <span className="text-[10px] text-muted-foreground">
+                  {new Date(u.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: '2-digit' })}
+                </span>
+              </div>
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4 text-xs text-muted-foreground">
