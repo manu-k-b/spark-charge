@@ -44,7 +44,7 @@ const AdminUsers: React.FC = () => {
 
   const startEdit = (user: UserRow) => {
     setEditingId(user.id);
-    setEditValue(user.balance.toFixed(2));
+    setEditValue('');
   };
 
   const cancelEdit = () => {

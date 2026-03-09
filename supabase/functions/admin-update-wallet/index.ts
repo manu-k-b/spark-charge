@@ -41,14 +41,27 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ error: "Invalid user_id" }), { status: 400, headers: corsHeaders });
     }
     const parsedAmount = Number(amount);
-    if (isNaN(parsedAmount) || parsedAmount < 0 || parsedAmount > 100000) {
-      return new Response(JSON.stringify({ error: "Amount must be between 0 and 100000" }), { status: 400, headers: corsHeaders });
+    if (isNaN(parsedAmount) || parsedAmount <= 0 || parsedAmount > 100000) {
+      return new Response(JSON.stringify({ error: "Amount must be between 1 and 100000" }), { status: 400, headers: corsHeaders });
     }
+
+    // Get current balance
+    const { data: walletData, error: walletError } = await supabase
+      .from("wallet")
+      .select("balance")
+      .eq("user_id", user_id)
+      .single();
+
+    if (walletError || !walletData) {
+      return new Response(JSON.stringify({ error: "Wallet not found" }), { status: 404, headers: corsHeaders });
+    }
+
+    const newBalance = Number(walletData.balance) + parsedAmount;
 
     // Update wallet using service role (bypasses RLS)
     const { data, error } = await supabase
       .from("wallet")
-      .update({ balance: parsedAmount })
+      .update({ balance: newBalance })
       .eq("user_id", user_id)
       .select("balance")
       .single();
