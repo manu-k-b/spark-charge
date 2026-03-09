@@ -11,7 +11,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Home from "./pages/Home";
 import Charging from "./pages/Charging";
-import Scan from "./pages/Scan";
+
 import Wallet from "./pages/Wallet";
 import Profile from "./pages/Profile";
 import Admin from "./pages/Admin";
@@ -64,7 +64,7 @@ const AppRoutes = () => {
       <Route path="/signup" element={<AuthRoute><Signup /></AuthRoute>} />
       <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
       <Route path="/charging" element={<ProtectedRoute><Charging /></ProtectedRoute>} />
-      <Route path="/scan" element={<ProtectedRoute><Scan /></ProtectedRoute>} />
+      
       <Route path="/wallet" element={<ProtectedRoute><Wallet /></ProtectedRoute>} />
       <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
       <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
