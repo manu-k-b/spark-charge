@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Mail, History, Settings, LogOut, ChevronRight, Zap } from 'lucide-react';
+import { User, Mail, History, Settings, LogOut, ChevronRight, Zap, Shield } from 'lucide-react';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAdmin } from '@/hooks/useAdmin';
 import { supabase } from '@/integrations/supabase/client';
 import { ComingSoonModal } from '@/components/ui/ComingSoonModal';
 import { toast } from 'sonner';
@@ -17,6 +18,7 @@ interface SessionHistory {
 
 const Profile: React.FC = () => {
   const { user, logout } = useAuth();
+  const { isAdmin } = useAdmin();
   const navigate = useNavigate();
   const [showSettings, setShowSettings] = useState(false);
   const [sessions, setSessions] = useState<SessionHistory[]>([]);
@@ -93,6 +95,19 @@ const Profile: React.FC = () => {
         </div>
 
         <div className="card-elevated overflow-hidden">
+          {isAdmin && (
+            <>
+              <button onClick={() => navigate('/admin')}
+                className="w-full p-4 flex items-center gap-4 hover:bg-muted/50 transition-colors">
+                <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
+                  <Shield className="w-5 h-5 text-primary" />
+                </div>
+                <span className="flex-1 text-left font-medium">Admin Dashboard</span>
+                <ChevronRight className="w-5 h-5 text-muted-foreground" />
+              </button>
+              <div className="border-t border-border" />
+            </>
+          )}
           <button onClick={() => setShowSettings(true)}
             className="w-full p-4 flex items-center gap-4 hover:bg-muted/50 transition-colors">
             <div className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center">
