@@ -21,6 +21,7 @@ export type Database = {
           id: string
           power_kw: number
           relay: boolean
+          reset_energy: boolean
           updated_at: string
           voltage: number
         }
@@ -30,6 +31,7 @@ export type Database = {
           id?: string
           power_kw?: number
           relay?: boolean
+          reset_energy?: boolean
           updated_at?: string
           voltage?: number
         }
@@ -39,6 +41,7 @@ export type Database = {
           id?: string
           power_kw?: number
           relay?: boolean
+          reset_energy?: boolean
           updated_at?: string
           voltage?: number
         }
