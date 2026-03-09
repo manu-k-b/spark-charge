@@ -54,20 +54,46 @@ const Admin: React.FC = () => {
       return;
     }
     const fetchData = async () => {
-      const [sessionsRes, walletsRes] = await Promise.all([
+      const [sessionsRes, walletsRes, settingsRes] = await Promise.all([
         supabase
           .from('charging_session')
           .select('*')
           .order('start_time', { ascending: false })
           .limit(50),
         supabase.from('wallet').select('user_id, balance'),
+        supabase.from('settings').select('value').eq('key', 'price_per_kwh').maybeSingle(),
       ]);
       if (sessionsRes.data) setSessions(sessionsRes.data as unknown as AdminSession[]);
       if (walletsRes.data) setWallets(walletsRes.data as unknown as AdminWallet[]);
+      if (settingsRes.data) {
+        const val = String(settingsRes.data.value);
+        setPrice(val);
+        setPriceInput(val);
+      }
       setLoading(false);
     };
     fetchData();
   }, [isAdmin, adminLoading, navigate]);
+
+  const handleSavePrice = async () => {
+    const num = parseFloat(priceInput);
+    if (isNaN(num) || num <= 0 || num > 100) {
+      toast.error('Enter a valid price between ₹0.01 and ₹100');
+      return;
+    }
+    setSavingPrice(true);
+    const { error } = await supabase
+      .from('settings')
+      .update({ value: num })
+      .eq('key', 'price_per_kwh');
+    if (error) {
+      toast.error('Failed to update price');
+    } else {
+      setPrice(String(num));
+      toast.success(`Price updated to ₹${num}/kWh`);
+    }
+    setSavingPrice(false);
+  };
 
   if (adminLoading || loading) {
     return (
