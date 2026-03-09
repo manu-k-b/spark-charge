@@ -52,7 +52,7 @@ const Signup: React.FC = () => {
             <Zap className="w-8 h-8 text-primary-foreground" />
           </div>
           <h1 className="text-2xl font-display font-bold mb-1">Create Account</h1>
-          <p className="text-muted-foreground text-sm">Start charging your EV today</p>
+          <p className="text-muted-foreground text-sm">Sahrdaya Charging Point</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
