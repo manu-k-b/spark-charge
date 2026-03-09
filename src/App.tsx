@@ -15,6 +15,7 @@ import Scan from "./pages/Scan";
 import Wallet from "./pages/Wallet";
 import Profile from "./pages/Profile";
 import Admin from "./pages/Admin";
+import History from "./pages/History";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -67,6 +68,7 @@ const AppRoutes = () => {
       <Route path="/wallet" element={<ProtectedRoute><Wallet /></ProtectedRoute>} />
       <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
       <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+      <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

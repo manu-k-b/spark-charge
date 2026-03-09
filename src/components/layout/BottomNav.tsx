@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, QrCode, Wallet, User } from 'lucide-react';
+import { Home, QrCode, Wallet, User, History } from 'lucide-react';
 
 const navItems = [
   { path: '/home', icon: Home, label: 'Home' },
   { path: '/scan', icon: QrCode, label: 'Scan' },
+  { path: '/history', icon: History, label: 'History' },
   { path: '/wallet', icon: Wallet, label: 'Wallet' },
   { path: '/profile', icon: User, label: 'Profile' },
 ];
