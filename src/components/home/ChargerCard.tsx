@@ -8,7 +8,7 @@ export const ChargerCard: React.FC = () => {
 
   if (!chargerStatus) return null;
 
-  const displayStatus = chargerStatus.relay ? 'charging' : 'available';
+  const displayStatus = isCharging ? 'charging' : chargerStatus.relay ? 'in-use' : 'available';
 
   return (
     <div className={`card-elevated p-5 ${isCharging ? 'ring-2 ring-primary shadow-glow' : ''}`}>

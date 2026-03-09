@@ -126,6 +126,23 @@ export const ChargerProvider: React.FC<{ children: ReactNode }> = ({ children })
     }
     if (!chargerStatus) throw new Error('Charger not available.');
 
+    // If relay is already on, another user is charging
+    if (chargerStatus.relay) {
+      throw new Error('Charger is currently in use. Please wait until it becomes available.');
+    }
+
+    // Check if current user already has an active session
+    const { data: ownActive } = await supabase
+      .from('charging_session')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('status', 'active')
+      .maybeSingle();
+
+    if (ownActive) {
+      throw new Error('You already have an active session.');
+    }
+
     // Create session with current energy as start_energy
     const { data: session, error } = await supabase
       .from('charging_session')
