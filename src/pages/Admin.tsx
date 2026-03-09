@@ -158,6 +158,39 @@ const Admin: React.FC = () => {
           </div>
         </div>
 
+        {/* Price Setting */}
+        <div className="card-elevated p-4">
+          <div className="flex items-center justify-between mb-3">
+            <span className="font-display font-semibold flex items-center gap-2">
+              <Settings className="w-4 h-4 text-primary" />
+              Price per kWh
+            </span>
+            <span className="text-xs text-muted-foreground">Current: ₹{price}</span>
+          </div>
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">₹</span>
+              <input
+                type="number"
+                value={priceInput}
+                onChange={(e) => setPriceInput(e.target.value)}
+                className="input-field pl-7 py-2 text-sm"
+                min="0.01"
+                max="100"
+                step="0.5"
+              />
+            </div>
+            <button
+              onClick={handleSavePrice}
+              disabled={savingPrice || priceInput === price}
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-xl font-semibold text-sm flex items-center gap-1.5 disabled:opacity-50 hover:opacity-90 transition-all"
+            >
+              {savingPrice ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+              Save
+            </button>
+          </div>
+        </div>
+
         {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-3">
           <div className="card-elevated p-4">
