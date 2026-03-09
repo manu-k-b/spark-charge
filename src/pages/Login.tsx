@@ -39,7 +39,7 @@ const Login: React.FC = () => {
           <div className="w-20 h-20 mx-auto mb-6 gradient-primary rounded-2xl flex items-center justify-center shadow-glow">
             <Zap className="w-10 h-10 text-primary-foreground" />
           </div>
-          <h1 className="text-3xl font-display font-bold mb-2">EV Charge</h1>
+          <h1 className="text-3xl font-display font-bold mb-2">Sahrdaya Charging Point</h1>
           <p className="text-muted-foreground">Power your ride, simply.</p>
         </div>
 
