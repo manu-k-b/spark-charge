@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import { ArrowLeft, Clock, Zap } from 'lucide-react';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import { LiveStats } from '@/components/charging/LiveStats';
@@ -13,8 +13,7 @@ const Charging: React.FC = () => {
   const navigate = useNavigate();
 
   if (!isCharging) {
-    navigate('/home');
-    return null;
+    return <Navigate to="/home" replace />;
   }
 
   const getElapsedTime = () => {
