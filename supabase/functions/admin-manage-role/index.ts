@@ -34,46 +34,44 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403, headers: corsHeaders });
     }
 
-    // Fetch all auth users
-    const { data: { users }, error: usersError } = await supabase.auth.admin.listUsers({ perPage: 1000 });
-    if (usersError) throw usersError;
+    const { user_id, action } = await req.json();
 
-    // Fetch wallets, session counts, and roles
-    const [walletsRes, sessionsRes, rolesRes] = await Promise.all([
-      supabase.from("wallet").select("user_id, balance"),
-      supabase.from("charging_session").select("user_id, status"),
-      supabase.from("user_roles").select("user_id, role"),
-    ]);
-
-    const walletMap = new Map((walletsRes.data || []).map((w: any) => [w.user_id, Number(w.balance)]));
-    const sessionMap = new Map<string, { total: number; active: number }>();
-    for (const s of sessionsRes.data || []) {
-      const entry = sessionMap.get(s.user_id) || { total: 0, active: 0 };
-      entry.total++;
-      if (s.status === "active") entry.active++;
-      sessionMap.set(s.user_id, entry);
+    if (!user_id || typeof user_id !== "string") {
+      return new Response(JSON.stringify({ error: "Invalid user_id" }), { status: 400, headers: corsHeaders });
     }
-    const adminSet = new Set(
-      (rolesRes.data || []).filter((r: any) => r.role === "admin").map((r: any) => r.user_id)
-    );
+    if (action !== "grant" && action !== "revoke") {
+      return new Response(JSON.stringify({ error: "Action must be 'grant' or 'revoke'" }), { status: 400, headers: corsHeaders });
+    }
 
-    const result = users.map((u: any) => ({
-      id: u.id,
-      email: u.email,
-      created_at: u.created_at,
-      balance: walletMap.get(u.id) ?? 0,
-      session_count: sessionMap.get(u.id)?.total ?? 0,
-      active_sessions: sessionMap.get(u.id)?.active ?? 0,
-      is_admin: adminSet.has(u.id),
-    }));
+    // Prevent self-revoke
+    if (user_id === user.id && action === "revoke") {
+      return new Response(JSON.stringify({ error: "Cannot revoke your own admin role" }), { status: 400, headers: corsHeaders });
+    }
 
-    return new Response(JSON.stringify(result), {
+    if (action === "grant") {
+      const { error } = await supabase
+        .from("user_roles")
+        .upsert({ user_id, role: "admin" }, { onConflict: "user_id,role" });
+      if (error) {
+        return new Response(JSON.stringify({ error: error.message }), { status: 500, headers: corsHeaders });
+      }
+    } else {
+      const { error } = await supabase
+        .from("user_roles")
+        .delete()
+        .eq("user_id", user_id)
+        .eq("role", "admin");
+      if (error) {
+        return new Response(JSON.stringify({ error: error.message }), { status: 500, headers: corsHeaders });
+      }
+    }
+
+    return new Response(JSON.stringify({ success: true, action }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (err) {
     return new Response(JSON.stringify({ error: err.message }), {
-      status: 500,
-      headers: corsHeaders,
+      status: 500, headers: corsHeaders,
     });
   }
 });
