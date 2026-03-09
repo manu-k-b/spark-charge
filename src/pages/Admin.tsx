@@ -236,11 +236,20 @@ const Admin: React.FC = () => {
             className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-all ${
               tab === 'sessions' ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'
             }`}>
-            All Sessions
+            Sessions
+          </button>
+          <button onClick={() => setTab('users')}
+            className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-all ${
+              tab === 'users' ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'
+            }`}>
+            Users
           </button>
         </div>
 
-        {/* Session List */}
+        {/* Tab Content */}
+        {tab === 'users' ? (
+          <AdminUsers />
+        ) : (
         <div className="space-y-2">
           {(tab === 'overview' ? activeSessions : completedSessions).length === 0 ? (
             <p className="text-center text-muted-foreground text-sm py-6">
