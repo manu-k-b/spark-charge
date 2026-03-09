@@ -11,7 +11,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Home from "./pages/Home";
 import Charging from "./pages/Charging";
-import Scan from "./pages/Scan";
+
 import Wallet from "./pages/Wallet";
 import Profile from "./pages/Profile";
 import Admin from "./pages/Admin";
