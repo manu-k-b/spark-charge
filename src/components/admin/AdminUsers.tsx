@@ -44,7 +44,7 @@ const AdminUsers: React.FC = () => {
 
   const startEdit = (user: UserRow) => {
     setEditingId(user.id);
-    setEditValue(user.balance.toFixed(2));
+    setEditValue('');
   };
 
   const cancelEdit = () => {
@@ -54,8 +54,8 @@ const AdminUsers: React.FC = () => {
 
   const saveBalance = async (userId: string) => {
     const num = parseFloat(editValue);
-    if (isNaN(num) || num < 0 || num > 100000) {
-      toast.error('Enter a valid amount (₹0 – ₹1,00,000)');
+    if (isNaN(num) || num <= 0 || num > 100000) {
+      toast.error('Enter a valid amount to add (₹1 – ₹1,00,000)');
       return;
     }
 
@@ -69,10 +69,10 @@ const AdminUsers: React.FC = () => {
     });
 
     if (error) {
-      toast.error('Failed to update balance');
+      toast.error('Failed to add funds');
     } else {
       setUsers(prev => prev.map(u => u.id === userId ? { ...u, balance: data.balance } : u));
-      toast.success(`Balance updated to ₹${Number(data.balance).toFixed(2)}`);
+      toast.success(`₹${num.toFixed(2)} added. New balance: ₹${Number(data.balance).toFixed(2)}`);
     }
     setSaving(false);
     setEditingId(null);
@@ -162,16 +162,17 @@ const AdminUsers: React.FC = () => {
               <div className="flex items-center gap-4 text-xs text-muted-foreground">
                 {editingId === u.id ? (
                   <div className="flex items-center gap-1.5">
-                    <span className="text-muted-foreground font-medium">₹</span>
+                    <span className="text-xs text-muted-foreground font-medium">+₹</span>
                     <input
                       type="number"
                       value={editValue}
                       onChange={(e) => setEditValue(e.target.value)}
                       className="input-field w-24 py-1 px-2 text-xs"
-                      min="0"
+                      min="1"
                       max="100000"
                       step="1"
                       autoFocus
+                      placeholder="Amount"
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') saveBalance(u.id);
                         if (e.key === 'Escape') cancelEdit();
@@ -198,7 +199,7 @@ const AdminUsers: React.FC = () => {
                     <button
                       onClick={() => startEdit(u)}
                       className="p-0.5 rounded hover:bg-muted transition-colors ml-1"
-                      title="Edit balance"
+                      title="Add funds"
                     >
                       <Pencil className="w-3 h-3 text-muted-foreground" />
                     </button>
