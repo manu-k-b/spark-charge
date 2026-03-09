@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Mail, History, Settings, LogOut, ChevronRight, Zap } from 'lucide-react';
+import { User, Mail, History, Settings, LogOut, ChevronRight, Zap, Shield } from 'lucide-react';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAdmin } from '@/hooks/useAdmin';
 import { supabase } from '@/integrations/supabase/client';
 import { ComingSoonModal } from '@/components/ui/ComingSoonModal';
 import { toast } from 'sonner';
