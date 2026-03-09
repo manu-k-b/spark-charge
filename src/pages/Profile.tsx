@@ -18,6 +18,7 @@ interface SessionHistory {
 
 const Profile: React.FC = () => {
   const { user, logout } = useAuth();
+  const { isAdmin } = useAdmin();
   const navigate = useNavigate();
   const [showSettings, setShowSettings] = useState(false);
   const [sessions, setSessions] = useState<SessionHistory[]>([]);
