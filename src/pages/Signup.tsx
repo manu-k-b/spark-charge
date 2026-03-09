@@ -52,7 +52,7 @@ const Signup: React.FC = () => {
             <Zap className="w-8 h-8 text-primary-foreground" />
           </div>
           <h1 className="text-2xl font-display font-bold mb-1">Create Account</h1>
-          <p className="text-muted-foreground text-sm">Start charging your EV today</p>
+          <p className="text-muted-foreground text-sm">Sahrdaya Charging Point</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -64,7 +64,7 @@ const Signup: React.FC = () => {
           <div className="relative">
             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email address" className="input-field pl-12" autoComplete="email" />
+              placeholder="example@sahrdaya.ac.in" className="input-field pl-12" autoComplete="email" />
           </div>
           <div className="relative">
             <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
