@@ -4,6 +4,7 @@ import { ArrowLeft, Users, Zap, IndianRupee, Activity, Clock, Settings, Check, L
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import { useAdmin } from '@/hooks/useAdmin';
 import { useCharger } from '@/contexts/ChargerContext';
+import AdminUsers from '@/components/admin/AdminUsers';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
