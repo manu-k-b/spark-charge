@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Users, Zap, IndianRupee, Activity, Clock } from 'lucide-react';
+import { ArrowLeft, Users, Zap, IndianRupee, Activity, Clock, Settings, Check, Loader2 } from 'lucide-react';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import { useAdmin } from '@/hooks/useAdmin';
 import { useCharger } from '@/contexts/ChargerContext';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 interface AdminSession {
   id: string;
@@ -42,6 +43,9 @@ const Admin: React.FC = () => {
   const [wallets, setWallets] = useState<AdminWallet[]>([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<'overview' | 'sessions'>('overview');
+  const [price, setPrice] = useState('');
+  const [priceInput, setPriceInput] = useState('');
+  const [savingPrice, setSavingPrice] = useState(false);
 
   useEffect(() => {
     if (adminLoading) return;
@@ -50,20 +54,46 @@ const Admin: React.FC = () => {
       return;
     }
     const fetchData = async () => {
-      const [sessionsRes, walletsRes] = await Promise.all([
+      const [sessionsRes, walletsRes, settingsRes] = await Promise.all([
         supabase
           .from('charging_session')
           .select('*')
           .order('start_time', { ascending: false })
           .limit(50),
         supabase.from('wallet').select('user_id, balance'),
+        supabase.from('settings').select('value').eq('key', 'price_per_kwh').maybeSingle(),
       ]);
       if (sessionsRes.data) setSessions(sessionsRes.data as unknown as AdminSession[]);
       if (walletsRes.data) setWallets(walletsRes.data as unknown as AdminWallet[]);
+      if (settingsRes.data) {
+        const val = String(settingsRes.data.value);
+        setPrice(val);
+        setPriceInput(val);
+      }
       setLoading(false);
     };
     fetchData();
   }, [isAdmin, adminLoading, navigate]);
+
+  const handleSavePrice = async () => {
+    const num = parseFloat(priceInput);
+    if (isNaN(num) || num <= 0 || num > 100) {
+      toast.error('Enter a valid price between ₹0.01 and ₹100');
+      return;
+    }
+    setSavingPrice(true);
+    const { error } = await supabase
+      .from('settings')
+      .update({ value: num })
+      .eq('key', 'price_per_kwh');
+    if (error) {
+      toast.error('Failed to update price');
+    } else {
+      setPrice(String(num));
+      toast.success(`Price updated to ₹${num}/kWh`);
+    }
+    setSavingPrice(false);
+  };
 
   if (adminLoading || loading) {
     return (
@@ -125,6 +155,39 @@ const Admin: React.FC = () => {
               <div className="text-lg font-bold">{chargerStatus?.energy?.toFixed(2) || 0}</div>
               <div className="text-[10px] text-muted-foreground">kWh</div>
             </div>
+          </div>
+        </div>
+
+        {/* Price Setting */}
+        <div className="card-elevated p-4">
+          <div className="flex items-center justify-between mb-3">
+            <span className="font-display font-semibold flex items-center gap-2">
+              <Settings className="w-4 h-4 text-primary" />
+              Price per kWh
+            </span>
+            <span className="text-xs text-muted-foreground">Current: ₹{price}</span>
+          </div>
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">₹</span>
+              <input
+                type="number"
+                value={priceInput}
+                onChange={(e) => setPriceInput(e.target.value)}
+                className="input-field pl-7 py-2 text-sm"
+                min="0.01"
+                max="100"
+                step="0.5"
+              />
+            </div>
+            <button
+              onClick={handleSavePrice}
+              disabled={savingPrice || priceInput === price}
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-xl font-semibold text-sm flex items-center gap-1.5 disabled:opacity-50 hover:opacity-90 transition-all"
+            >
+              {savingPrice ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+              Save
+            </button>
           </div>
         </div>
 
