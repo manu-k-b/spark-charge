@@ -1,8 +1,8 @@
 import React from 'react';
-import { Zap, CheckCircle, WifiOff } from 'lucide-react';
+import { Zap, CheckCircle, WifiOff, Clock } from 'lucide-react';
 
 interface StatusBadgeProps {
-  status: 'available' | 'charging' | 'offline';
+  status: 'available' | 'charging' | 'offline' | 'in-use';
 }
 
 export const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
@@ -15,6 +15,11 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
     charging: {
       icon: Zap,
       label: 'Charging',
+      className: 'status-charging',
+    },
+    'in-use': {
+      icon: Clock,
+      label: 'In Use',
       className: 'status-charging',
     },
     offline: {
