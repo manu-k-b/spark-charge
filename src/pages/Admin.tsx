@@ -43,7 +43,7 @@ const Admin: React.FC = () => {
   const [sessions, setSessions] = useState<AdminSession[]>([]);
   const [wallets, setWallets] = useState<AdminWallet[]>([]);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState<'overview' | 'sessions'>('overview');
+  const [tab, setTab] = useState<'overview' | 'sessions' | 'users'>('overview');
   const [price, setPrice] = useState('');
   const [priceInput, setPriceInput] = useState('');
   const [savingPrice, setSavingPrice] = useState(false);
