@@ -283,6 +283,7 @@ const Admin: React.FC = () => {
             ))
           )}
         </div>
+        )}
       </div>
     </MobileLayout>
   );
