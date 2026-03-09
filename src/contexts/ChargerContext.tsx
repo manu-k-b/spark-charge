@@ -139,10 +139,10 @@ export const ChargerProvider: React.FC<{ children: ReactNode }> = ({ children })
       .single();
     if (error) throw error;
 
-    // Turn on relay
+    // Turn on relay and signal PZEM energy reset
     await supabase
       .from('charger_status')
-      .update({ relay: true })
+      .update({ relay: true, reset_energy: true })
       .eq('id', 'charger-001');
 
     setCurrentSession(session as unknown as ChargingSession);
