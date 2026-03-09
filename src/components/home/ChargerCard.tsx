@@ -14,10 +14,10 @@ export const ChargerCard: React.FC = () => {
     <div className={`card-elevated p-5 ${isCharging ? 'ring-2 ring-primary shadow-glow' : ''}`}>
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h3 className="font-display font-bold text-lg">Campus EV Charger</h3>
+          <h3 className="font-display font-bold text-lg">ZapPoint Station</h3>
           <div className="flex items-center gap-1 text-muted-foreground text-sm mt-1">
             <MapPin className="w-4 h-4" />
-            <span>Main Parking Lot</span>
+            <span>Sahrdaya College of Engineering</span>
           </div>
         </div>
         <StatusBadge status={displayStatus} />
