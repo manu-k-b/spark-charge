@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Users, Zap, IndianRupee, Activity, Clock } from 'lucide-react';
+import { ArrowLeft, Users, Zap, IndianRupee, Activity, Clock, Settings, Check, Loader2 } from 'lucide-react';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import { useAdmin } from '@/hooks/useAdmin';
 import { useCharger } from '@/contexts/ChargerContext';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 interface AdminSession {
   id: string;
