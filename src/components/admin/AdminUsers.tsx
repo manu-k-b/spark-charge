@@ -199,7 +199,7 @@ const AdminUsers: React.FC = () => {
                     <button
                       onClick={() => startEdit(u)}
                       className="p-0.5 rounded hover:bg-muted transition-colors ml-1"
-                      title="Edit balance"
+                      title="Add funds"
                     >
                       <Pencil className="w-3 h-3 text-muted-foreground" />
                     </button>
