@@ -1,0 +1,1 @@
+ALTER TABLE public.charger_status ADD COLUMN reset_energy boolean NOT NULL DEFAULT false;
