@@ -162,16 +162,17 @@ const AdminUsers: React.FC = () => {
               <div className="flex items-center gap-4 text-xs text-muted-foreground">
                 {editingId === u.id ? (
                   <div className="flex items-center gap-1.5">
-                    <span className="text-muted-foreground font-medium">₹</span>
+                    <span className="text-xs text-muted-foreground font-medium">+₹</span>
                     <input
                       type="number"
                       value={editValue}
                       onChange={(e) => setEditValue(e.target.value)}
                       className="input-field w-24 py-1 px-2 text-xs"
-                      min="0"
+                      min="1"
                       max="100000"
                       step="1"
                       autoFocus
+                      placeholder="Amount"
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') saveBalance(u.id);
                         if (e.key === 'Escape') cancelEdit();
