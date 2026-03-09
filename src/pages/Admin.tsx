@@ -43,6 +43,9 @@ const Admin: React.FC = () => {
   const [wallets, setWallets] = useState<AdminWallet[]>([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<'overview' | 'sessions'>('overview');
+  const [price, setPrice] = useState('');
+  const [priceInput, setPriceInput] = useState('');
+  const [savingPrice, setSavingPrice] = useState(false);
 
   useEffect(() => {
     if (adminLoading) return;
