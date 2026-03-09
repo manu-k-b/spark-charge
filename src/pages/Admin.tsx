@@ -4,6 +4,7 @@ import { ArrowLeft, Users, Zap, IndianRupee, Activity, Clock, Settings, Check, L
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import { useAdmin } from '@/hooks/useAdmin';
 import { useCharger } from '@/contexts/ChargerContext';
+import AdminUsers from '@/components/admin/AdminUsers';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
@@ -42,7 +43,7 @@ const Admin: React.FC = () => {
   const [sessions, setSessions] = useState<AdminSession[]>([]);
   const [wallets, setWallets] = useState<AdminWallet[]>([]);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState<'overview' | 'sessions'>('overview');
+  const [tab, setTab] = useState<'overview' | 'sessions' | 'users'>('overview');
   const [price, setPrice] = useState('');
   const [priceInput, setPriceInput] = useState('');
   const [savingPrice, setSavingPrice] = useState(false);
@@ -235,11 +236,20 @@ const Admin: React.FC = () => {
             className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-all ${
               tab === 'sessions' ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'
             }`}>
-            All Sessions
+            Sessions
+          </button>
+          <button onClick={() => setTab('users')}
+            className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-all ${
+              tab === 'users' ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'
+            }`}>
+            Users
           </button>
         </div>
 
-        {/* Session List */}
+        {/* Tab Content */}
+        {tab === 'users' ? (
+          <AdminUsers />
+        ) : (
         <div className="space-y-2">
           {(tab === 'overview' ? activeSessions : completedSessions).length === 0 ? (
             <p className="text-center text-muted-foreground text-sm py-6">
@@ -273,6 +283,7 @@ const Admin: React.FC = () => {
             ))
           )}
         </div>
+        )}
       </div>
     </MobileLayout>
   );
