@@ -50,7 +50,7 @@ const Login: React.FC = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email address"
+              placeholder="example@sahrdaya.ac.in"
               className="input-field pl-12"
               autoComplete="email"
             />
